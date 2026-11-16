@@ -1,0 +1,61 @@
+
+:root {
+    --title: #5424a5;
+    --surface: #eeeaff;
+    --details: #e8a3bd;
+}
+
+/* HEADER */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    padding: 0 40px;
+    background-color: var(--surface);
+}
+
+/* LOGOTIPO */
+
+.logo {
+    color: var(--title);
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* BUSCADOR */
+
+.search {
+    display: flex;
+    width: 65%;
+    height: 25px;
+}
+
+.search input {
+    width: 100%;
+    border: none;
+    border-radius: 20px;
+    padding: 0 35px;
+    background-color: var(--details);
+    color: var(--title);
+    font-size: 14px;
+    outline: none;
+}
+
+.search input::placeholder {
+    color: var(--title);
+    font-weight: bold;
+}
+
+/* BOTÓN DERECHO */
+
+.header-button {
+    width: 34px;
+    height: 23px;
+    border: none;
+    background-color: var(--details);
+    cursor: pointer;
+}
