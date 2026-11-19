@@ -28,12 +28,13 @@
     <!-- BARRA IZQUIERDA -->
     <aside class="sidebar-left">
 
-        <section class="profile">
+        <section class="profile" aria-labelledby="sidebar-profile-title">
+            <h2 id="sidebar-profile-title">Perfil</h2>
             <span class="profile-image"></span>
             <p>Usuario</p>
         </section>
 
-        <nav class="main-navigation">
+        <nav class="main-navigation" aria-label="Navegación principal">
             <a href="profile.html">Perfil</a>
             <a href="newProyect.html">Crear Proyecto</a>
             <a href="newPost.html">Crear Publicación</a>
@@ -44,9 +45,11 @@
 
 
     <!-- FEED CENTRAL -->
-    <section class="feed">
+    <section class="feed" aria-labelledby="feed-title">
 
-        <nav class="feed-navigation">
+        <h1 id="feed-title">Inicio</h1>
+
+        <nav class="feed-navigation" aria-label="Filtrar publicaciones">
             <a href="#">Para ti</a>
             <a href="#">Siguiendo</a>
             <a href="#">Proyectos</a>
@@ -54,21 +57,25 @@
 
 
         <!-- PUBLICACIONES -->
-        <section class="posts">
+        <section class="posts" aria-labelledby="posts-title">
 
-            <article class="post">
+            <h2 id="posts-title">Publicaciones</h2>
+
+            <!-- PUBLICACIÓN 1 -->
+            <article class="post" aria-labelledby="post-title-1">
+
+                <h3 id="post-title-1">Título Post</h3>
 
                 <figure class="post-image"></figure>
 
-                <section class="post-content">
+                <section class="post-content" aria-label="Contenido de la publicación">
 
                     <header class="post-user">
                         <span class="user-image"></span>
                         <span>Usuario</span>
                     </header>
 
-                    <section class="post-description">
-                        <h2>Título Post</h2>
+                    <section class="post-description" aria-label="Descripción de la publicación">
                         <p>Descripción</p>
                     </section>
 
@@ -82,19 +89,21 @@
             </article>
 
 
-            <article class="post">
+            <!-- PUBLICACIÓN 2 -->
+            <article class="post" aria-labelledby="post-title-2">
+
+                <h3 id="post-title-2">Título Post</h3>
 
                 <figure class="post-image"></figure>
 
-                <section class="post-content">
+                <section class="post-content" aria-label="Contenido de la publicación">
 
                     <header class="post-user">
                         <span class="user-image"></span>
                         <span>Usuario</span>
                     </header>
 
-                    <section class="post-description">
-                        <h2>Título Post</h2>
+                    <section class="post-description" aria-label="Descripción de la publicación">
                         <p>Descripción</p>
                     </section>
 
@@ -108,19 +117,21 @@
             </article>
 
 
-            <article class="post">
+            <!-- PUBLICACIÓN 3 -->
+            <article class="post" aria-labelledby="post-title-3">
+
+                <h3 id="post-title-3">Título Post</h3>
 
                 <figure class="post-image"></figure>
 
-                <section class="post-content">
+                <section class="post-content" aria-label="Contenido de la publicación">
 
                     <header class="post-user">
                         <span class="user-image"></span>
                         <span>Usuario</span>
                     </header>
 
-                    <section class="post-description">
-                        <h2>Título Post</h2>
+                    <section class="post-description" aria-label="Descripción de la publicación">
                         <p>Descripción</p>
                     </section>
 
@@ -142,79 +153,85 @@
     <aside class="sidebar-right">
 
         <!-- NOTIFICACIONES -->
-        <section class="notifications">
+        <section class="notifications" aria-labelledby="notifications-title">
 
-            <h2>Notificaciones</h2>
+            <h2 id="notifications-title">Notificaciones</h2>
 
-            <section class="notification-list">
+            <ul class="notification-list">
 
-                <article class="notification">
+                <li class="notification">
                     <span class="notification-image"></span>
-                    <section class="notification-content">
+
+                    <article class="notification-content">
                         <h3>Nueva conexión</h3>
                         <p>X ha aceptado tu solicitud de contacto.</p>
-                        <time>Hace 15 min</time>
-                    </section>
-                </article>
+                        <time datetime="2026-11-19T08:23">Hace 15 min</time>
+                    </article>
+                </li>
 
-                <article class="notification">
+                <li class="notification">
                     <span class="notification-image"></span>
-                    <section class="notification-content">
+
+                    <article class="notification-content">
                         <h3>Nuevo comentario</h3>
                         <p>X ha comentado tu publicación «Diseñar en equipo».</p>
-                        <time>Hace 1 h</time>
-                    </section>
-                </article>
+                        <time datetime="2026-11-19T07:38">Hace 1 h</time>
+                    </article>
+                </li>
 
-                <article class="notification">
+                <li class="notification">
                     <span class="notification-image"></span>
-                    <section class="notification-content">
+
+                    <article class="notification-content">
                         <h3>Invitación a un proyecto</h3>
                         <p>Te han invitado a colaborar en un nuevo proyecto.</p>
-                        <time>Hace 3 h</time>
-                    </section>
-                </article>
+                        <time datetime="2026-11-19T05:38">Hace 3 h</time>
+                    </article>
+                </li>
 
-            </section>
+            </ul>
 
         </section>
 
 
         <!-- CHATS -->
-        <section class="chats">
+        <section class="chats" aria-labelledby="chats-title">
 
-            <h2><a href="messages.html">Chats →</a></h2>
+            <h2 id="chats-title"><a href="messages.html">Chats →</a></h2>
 
-            <section class="chat-list">
+            <ul class="chat-list">
 
-                <article class="chat">
+                <li class="chat">
                     <span class="chat-image"></span>
-                    <section class="chat-content">
+
+                    <article class="chat-content">
                         <h3>X</h3>
                         <p>¿Revisamos la propuesta mañana?</p>
-                        <time>Hace 10 min</time>
-                    </section>
-                </article>
+                        <time datetime="2026-11-19T08:28">Hace 10 min</time>
+                    </article>
+                </li>
 
-                <article class="chat">
+                <li class="chat">
                     <span class="chat-image"></span>
-                    <section class="chat-content">
+
+                    <article class="chat-content">
                         <h3>Equipo de proyecto</h3>
                         <p>Ya está disponible el prototipo.</p>
-                        <time>Hace 45 min</time>
-                    </section>
-                </article>
+                        <time datetime="2026-11-19T07:53">Hace 45 min</time>
+                    </article>
+                </li>
 
-                <article class="chat">
+                <li class="chat">
                     <span class="chat-image"></span>
-                    <section class="chat-content">
+
+                    <article class="chat-content">
                         <h3>X</h3>
                         <p>Gracias por compartir tus ideas.</p>
-                        <time>Ayer</time>
-                    </section>
-                </article>
+                        <time datetime="2026-11-18">Ayer</time>
+                    </article>
+                </li>
 
-            </section>
+            </ul>
 
         </section>
 
