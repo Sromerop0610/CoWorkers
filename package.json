@@ -1,0 +1,29 @@
+{
+  "name": "coworkers",
+  "version": "1.0.0",
+  "description": "Fcha 1 USer persona: https://www.figma.com/board/nzcJnBkGPToyU8m5axGXfD/Desarrollo-interfaces-web?node-id=38-140&t=i6gGraDX4StvAwP5-4",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "lint": "eslint \"CoWorkersAplication/js/**/*.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sromerop0610/CoWorkers.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Sromerop0610/CoWorkers/issues"
+  },
+  "homepage": "https://github.com/Sromerop0610/CoWorkers#readme",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0"
+  }
+}
