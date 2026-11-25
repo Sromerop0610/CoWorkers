@@ -1,10 +1,186 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear proyecto | CO-WORKERS</title>
 </head>
 <body>
+<header class="header">
+    <a class="logo" href="index.html">CO-WORKERS</a>
 
+    <form class="search" action="#" method="get">
+        <label class="visually-hidden" for="buscar">Buscar</label>
+        <input type="search" id="buscar" name="q" placeholder="Buscar">
+    </form>
+
+    <a class="header-button" href="profile.html" aria-label="Ir a mi perfil"></a>
+</header>
+
+<main class="main-container">
+    <aside class="sidebar-left">
+        <section class="profile" aria-labelledby="sidebar-profile-title">
+            <h2 id="sidebar-profile-title">Perfil</h2>
+            <span class="profile-image" aria-hidden="true"></span>
+            <p>Usuario</p>
+        </section>
+
+        <nav class="main-navigation" aria-label="Navegación principal">
+            <a href="profile.html">Perfil</a>
+            <a href="newProyect.html">Crear Proyecto</a>
+            <a href="newPost.html">Crear Publicación</a>
+            <a href="settings.html">Configuración</a>
+        </nav>
+    </aside>
+
+    <section class="feed form-page" aria-labelledby="page-title">
+        <header class="section-heading">
+            <h1 id="page-title">Crear proyecto</h1>
+            <a href="index.html">Volver al inicio</a>
+        </header>
+
+        <form class="project-form" action="#" method="post" enctype="multipart/form-data">
+            <p class="form-introduction">
+                Presenta tu idea y encuentra personas para colaborar.
+            </p>
+
+            <p class="form-help">Los campos con * son obligatorios.</p>
+
+            <p class="form-field">
+                <label for="project-name">Nombre del proyecto *</label>
+                <input type="text" id="project-name" name="project-name"
+                       placeholder="Escribe el nombre de tu proyecto" required>
+            </p>
+
+            <p class="form-field">
+                <label for="project-description">Descripción *</label>
+                <textarea id="project-description" name="project-description"
+                          placeholder="Describe la idea, los objetivos y qué te gustaría construir en equipo..."
+                          rows="4" required></textarea>
+            </p>
+
+            <fieldset class="form-row">
+                <legend>Detalles del proyecto</legend>
+
+                <p class="form-field">
+                    <label for="project-category">Ámbito o categoría *</label>
+                    <select id="project-category" name="project-category" required>
+                        <option value="">Selecciona una categoría</option>
+                        <option value="tecnologia">Tecnología</option>
+                        <option value="diseno">Diseño</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="educacion">Educación</option>
+                        <option value="otros">Otros</option>
+                    </select>
+                </p>
+
+                <p class="form-field">
+                    <label for="collaboration-mode">Modalidad de colaboración *</label>
+                    <select id="collaboration-mode" name="collaboration-mode" required>
+                        <option value="remoto">En remoto</option>
+                        <option value="presencial">Presencial</option>
+                        <option value="hibrido">Híbrido</option>
+                    </select>
+                </p>
+            </fieldset>
+
+            <p class="form-field">
+                <label for="project-skills">Habilidades o perfiles que buscas *</label>
+                <input type="text" id="project-skills" name="project-skills"
+                       placeholder="Ej.: Diseño UX/UI, desarrollo frontend..." required>
+            </p>
+
+            <fieldset class="form-field">
+                <legend>Imagen o portada (opcional)</legend>
+
+                <p class="file-upload">
+                    <label for="project-image">Selecciona una imagen para tu proyecto</label>
+                    <input type="file" id="project-image" name="project-image"
+                           accept="image/jpeg,image/png">
+                    <small>JPG o PNG · Máximo 5 MB</small>
+                </p>
+            </fieldset>
+
+            <p class="form-note">
+                El proyecto se mostrará en la sección Proyectos para que otras personas
+                puedan conocerlo y solicitar colaborar.
+            </p>
+
+            <footer class="form-actions">
+                <a class="button button-outline" href="profile.html">Cancelar</a>
+                <button type="submit">Crear Proyecto</button>
+            </footer>
+        </form>
+    </section>
+
+    <aside class="sidebar-right">
+        <section class="notifications" aria-labelledby="notifications-title">
+            <h2 id="notifications-title">Notificaciones</h2>
+
+            <ul class="notification-list">
+                <li class="notification">
+                    <span class="notification-image" aria-hidden="true"></span>
+                    <article class="notification-content">
+                        <h3>Nueva conexión</h3>
+                        <p>X ha aceptado tu solicitud de contacto.</p>
+                        <time datetime="2026-11-23T13:34">Hace 15 min</time>
+                    </article>
+                </li>
+
+                <li class="notification">
+                    <span class="notification-image" aria-hidden="true"></span>
+                    <article class="notification-content">
+                        <h3>Nuevo comentario</h3>
+                        <p>X ha comentado tu publicación “Diseñar en equipo”.</p>
+                        <time datetime="2026-11-23T12:49">Hace 1 h</time>
+                    </article>
+                </li>
+
+                <li class="notification">
+                    <span class="notification-image" aria-hidden="true"></span>
+                    <article class="notification-content">
+                        <h3>Invitación a un proyecto</h3>
+                        <p>Te han invitado a colaborar en un nuevo proyecto.</p>
+                        <time datetime="2026-11-23T10:49">Hace 3 h</time>
+                    </article>
+                </li>
+            </ul>
+        </section>
+
+        <section class="chats" aria-labelledby="chats-title">
+            <h2 id="chats-title"><a href="messages.html">Chats →</a></h2>
+
+            <ul class="chat-list">
+                <li class="chat">
+                    <span class="chat-image" aria-hidden="true"></span>
+                    <article class="chat-content">
+                        <h3>X</h3>
+                        <p>¿Revisamos la propuesta mañana?</p>
+                        <time datetime="2026-11-23T13:39">Hace 10 min</time>
+                        </crito</article>
+                </
+                </li>
+
+                <li class="chat">
+                    <span class="chat-image" aria-hidden="true"></span>
+                    <article class="chat-content">
+                        <h3>Equipo de proyecto</h3>
+                        <p>Ya está disponible el prototipo.</p>
+                        <time datetime="2026-11-23T13:04">Hace 45 min</time>
+                    </article>
+                </li>
+
+                <li class="chat">
+                    <span class="chat-image" aria-hidden="true"></span>
+                    <article class="chat-content">
+                        <h3>X</h3>
+                        <p>Gracias por compartir tus ideas.</p>
+                        <time datetime="2026-11-22">Ayer</time>
+                    </article>
+                </li>
+            </ul>
+        </section>
+    </aside>
+</main>
 </body>
 </html>
