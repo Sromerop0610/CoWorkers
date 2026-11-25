@@ -1,4 +1,3 @@
-
 const formulario = document.querySelector("#login-form");
 
 const campoIdentificador = document.querySelector("#login-identifier");

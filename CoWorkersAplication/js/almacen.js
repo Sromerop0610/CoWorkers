@@ -46,3 +46,49 @@ export function crear(dato) {
 
     return nuevoUsuario;
 }
+
+
+// Actualizar los datos de un usuario.
+export function actualizar(id, nuevosDatos) {
+
+    const usuarios = obtenerTodos();
+
+    const indice = usuarios.findIndex(usuario => usuario.id === id);
+
+    if (indice === -1) {
+        return null;
+    }
+
+    usuarios[indice] = {
+        ...usuarios[indice],
+        ...nuevosDatos,
+        id: usuarios[indice].id
+    };
+
+    localStorage.setItem(
+        COLECCION_USUARIOS,
+        JSON.stringify(usuarios)
+    );
+
+    return usuarios[indice];
+}
+
+
+// Eliminar un usuario.
+export function eliminar(id) {
+
+    const usuarios = obtenerTodos();
+
+    const usuariosActualizados = usuarios.filter(usuario => usuario.id !== id);
+
+    if (usuariosActualizados.length === usuarios.length) {
+        return false;
+    }
+
+    localStorage.setItem(
+        COLECCION_USUARIOS,
+        JSON.stringify(usuariosActualizados)
+    );
+
+    return true;
+}
