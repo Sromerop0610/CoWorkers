@@ -60,52 +60,144 @@
 
             <h2 id="form-title">Nueva publicación</h2>
 
-            <form class="publication-form" action="#" method="post" enctype="multipart/form-data">
+            <form
+                    class="publication-form"
+                    id="publication-form"
+                    novalidate
+                    enctype="multipart/form-data"
+            >
 
                 <!-- INFORMACIÓN DEL USUARIO -->
                 <section class="publisher" aria-label="Usuario que publica">
                     <span class="profile-image"></span>
+
                     <section class="publisher-content" aria-label="Datos del usuario">
                         <h3>Usuario</h3>
                         <p>Publicando como Usuario</p>
                     </section>
                 </section>
 
-                <p class="form-help">Comparte una idea con la comunidad. Los campos con * son obligatorios.</p>
+                <p class="form-help">
+                    Comparte una idea con la comunidad. Los campos con * son obligatorios.
+                </p>
 
 
                 <!-- TÍTULO -->
                 <section class="form-field" aria-labelledby="publication-title-label">
+
                     <h3 id="publication-title-label">Título *</h3>
-                    <input type="text" id="publication-title" name="publication-title"
-                           placeholder="Añade un título a tu publicación" required>
+
+                    <input
+                            type="text"
+                            id="publication-title"
+                            name="publication-title"
+                            placeholder="Añade un título a tu publicación"
+                            minlength="3"
+                            maxlength="80"
+                            required
+                            aria-describedby="publication-title-error"
+                    >
+
+                    <span
+                            class="error-message"
+                            id="publication-title-error"
+                    ></span>
+
                 </section>
 
 
-                <!-- CONTENIDO -->
+                <!-- CATEGORÍA -->
+                <section class="form-field" aria-labelledby="publication-category-label">
+
+                    <h3 id="publication-category-label">Categoría *</h3>
+
+                    <select
+                            id="publication-category"
+                            name="publication-category"
+                            required
+                            aria-describedby="publication-category-error"
+                    >
+                        <option value="">Selecciona una categoría</option>
+                        <option value="idea">Compartir una idea</option>
+                        <option value="collaboration">Buscar colaboración</option>
+                        <option value="project">Mostrar un proyecto</option>
+                        <option value="question">Hacer una pregunta</option>
+                        <option value="experience">Compartir una experiencia</option>
+                        <option value="other">Otros</option>
+                    </select>
+
+                    <span
+                            class="error-message"
+                            id="publication-category-error"
+                    ></span>
+
+                </section>
+
+
+                <!-- DESCRIPCIÓN -->
                 <section class="form-field" aria-labelledby="publication-content-label">
+
                     <h3 id="publication-content-label">Descripción o contenido *</h3>
-                    <textarea id="publication-content" name="publication-content" rows="6"
-                              placeholder="¿Qué te gustaría compartir? Desarrolla tu idea, cuenta tus avances o plantea una pregunta..."
-                              required></textarea>
+
+                    <textarea
+                            id="publication-content"
+                            name="publication-content"
+                            rows="6"
+                            minlength="20"
+                            maxlength="1000"
+                            placeholder="¿Qué te gustaría compartir? Desarrolla tu idea, cuenta tus avances o plantea una pregunta..."
+                            required
+                            aria-describedby="publication-content-error publication-content-counter"
+                    ></textarea>
+
+                    <span
+                            class="error-message"
+                            id="publication-content-error"
+                    ></span>
+
+                    <p
+                            class="character-counter"
+                            id="publication-content-counter"
+                            aria-live="polite"
+                    >
+                        0 / 1000 caracteres (mínimo 20)
+                    </p>
+
                 </section>
 
 
                 <!-- IMAGEN -->
                 <section class="form-field" aria-labelledby="publication-image-label">
+
                     <h3 id="publication-image-label">Imagen (opcional)</h3>
 
                     <section class="file-upload" aria-label="Subir imagen">
-                        <p>Arrastra una imagen aquí o</p>
-                        <input type="file" id="publication-image" name="publication-image"
-                               accept="image/jpeg,image/png">
-                        <p class="upload-help">JPG o PNG · Máximo 5 MB</p>
+                        <p>Selecciona una imagen para acompañar tu publicación.</p>
+
+                        <input
+                                type="file"
+                                id="publication-image"
+                                name="publication-image"
+                                accept="image/jpeg,image/png"
+                                aria-describedby="publication-image-error"
+                        >
+
+                        <p class="upload-help">
+                            JPG o PNG · Máximo 5 MB
+                        </p>
+
+                        <span
+                                class="error-message"
+                                id="publication-image-error"
+                        ></span>
                     </section>
+
                 </section>
 
 
                 <!-- VISIBILIDAD -->
                 <section class="form-field" aria-labelledby="visibility-label">
+
                     <h3 id="visibility-label">Visibilidad</h3>
 
                     <select id="visibility" name="visibility">
@@ -114,14 +206,24 @@
                         <option value="private">Solo yo</option>
                     </select>
 
-                    <p class="form-help">Tu publicación aparecerá en el feed de CO-WORKERS.</p>
+                    <p class="form-help">
+                        Elige quién podrá ver tu publicación.
+                    </p>
+
                 </section>
 
 
                 <!-- BOTONES -->
                 <footer class="form-actions">
-                    <a class="button button-outline" href="profile.html">Cancelar</a>
-                    <button type="submit">Publicar</button>
+
+                    <a class="button button-outline" href="profile.html">
+                        Cancelar
+                    </a>
+
+                    <button type="submit">
+                        Publicar
+                    </button>
+
                 </footer>
 
             </form>
@@ -179,7 +281,9 @@
         <!-- CHATS -->
         <section class="chats" aria-labelledby="chats-title">
 
-            <h2 id="chats-title"><a href="messages.html">Chats →</a></h2>
+            <h2 id="chats-title">
+                <a href="messages.html">Chats →</a>
+            </h2>
 
             <ul class="chat-list">
 
@@ -190,7 +294,7 @@
                         <h3>X</h3>
                         <p>¿Revisamos la propuesta mañana?</p>
                         <time datetime="2026-11-23T13:39">Hace 10 min</time>
-                </li>
+                    </article>
                 </li>
 
                 <li class="chat">
@@ -220,6 +324,8 @@
     </aside>
 
 </main>
+
+<script type="module" src="js/validacion.js"></script>
 
 </body>
 </html>
