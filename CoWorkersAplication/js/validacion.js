@@ -2,7 +2,8 @@ import {
     crear,
     obtenerTodos,
     obtenerPorId,
-    actualizar
+    actualizar,
+    crearPublicacion
 } from "./almacen.js";
 
 import {
@@ -453,198 +454,280 @@ const formularioPublicacion = document.querySelector("#publication-form");
 
 if (formularioPublicacion) {
 
-    const titulo = document.querySelector("#publication-title");
-    const categoria = document.querySelector("#publication-category");
-    const contenido = document.querySelector("#publication-content");
-    const imagen = document.querySelector("#publication-image");
+    // Comprobar que hay un usuario con sesión iniciada.
+    const usuarioActivoPublicacion = obtenerUsuarioActivo();
 
-    const camposPublicacion = [
-        titulo,
-        categoria,
-        contenido
-    ];
+    const usuarioPublicacion = usuarioActivoPublicacion
+        ? obtenerPorId(usuarioActivoPublicacion.id)
+        : null;
 
-    const camposTocados = new Set();
+    if (!usuarioPublicacion) {
 
-    // Contador de caracteres de la descripción.
-    const contador = document.querySelector("#publication-content-counter");
+        cerrarSesion();
+        window.location.href = "login.html";
 
-    function actualizarContador() {
+    } else {
 
-        const cantidad = contenido.value.length;
+        const titulo = document.querySelector("#publication-title");
+        const categoria = document.querySelector("#publication-category");
+        const contenido = document.querySelector("#publication-content");
+        const imagen = document.querySelector("#publication-image");
+        const visibilidad = formularioPublicacion.querySelector(
+            '[name="visibility"], #visibility'
+        );
 
-        contador.textContent =
-            `${cantidad} / ${contenido.maxLength} caracteres (mínimo ${contenido.minLength})`;
-    }
+        const camposPublicacion = [
+            titulo,
+            categoria,
+            contenido
+        ];
 
-    contenido.addEventListener("input", actualizarContador);
-
-    actualizarContador();
+        const camposTocados = new Set();
 
 
-    // Validar los campos de la publicación.
-    function validarCampoPublicacion(campo) {
+        // Contador de caracteres de la descripción.
+        const contador = document.querySelector("#publication-content-counter");
 
-        const valor = campo.value.trim();
+        function actualizarContador() {
 
-        if (campo.required && !valor) {
-            return "Este campo es obligatorio.";
+            const cantidad = contenido.value.length;
+
+            contador.textContent =
+                `${cantidad} / ${contenido.maxLength} caracteres (mínimo ${contenido.minLength})`;
         }
 
-        if (valor && campo.minLength > 0 && valor.length < campo.minLength) {
-            return `Debe tener al menos ${campo.minLength} caracteres.`;
-        }
+        contenido.addEventListener("input", actualizarContador);
 
-        if (campo.maxLength > 0 && valor.length > campo.maxLength) {
-            return `No puede superar los ${campo.maxLength} caracteres.`;
-        }
-
-        return "";
-    }
+        actualizarContador();
 
 
-    // Mostrar errores de la publicación.
-    function mostrarErrorPublicacion(campo) {
+        // Validar los campos de la publicación.
+        function validarCampoPublicacion(campo) {
 
-        const mensaje = validarCampoPublicacion(campo);
-        const elementoError = document.querySelector(`#${campo.id}-error`);
+            const valor = campo.value.trim();
 
-        elementoError.textContent = mensaje;
-
-        campo.setAttribute("aria-invalid", mensaje ? "true" : "false");
-
-        return mensaje;
-    }
-
-
-    // Validar los campos al salir de ellos.
-    camposPublicacion.forEach(campo => {
-
-        campo.addEventListener("blur", () => {
-
-            camposTocados.add(campo);
-            mostrarErrorPublicacion(campo);
-        });
-
-        // Volver a validar mientras se escribe.
-        campo.addEventListener("input", () => {
-
-            if (camposTocados.has(campo)) {
-                mostrarErrorPublicacion(campo);
+            if (campo.required && !valor) {
+                return "Este campo es obligatorio.";
             }
-        });
 
-        campo.addEventListener("change", () => {
-
-            if (camposTocados.has(campo)) {
-                mostrarErrorPublicacion(campo);
+            if (valor && campo.minLength > 0 && valor.length < campo.minLength) {
+                return `Debe tener al menos ${campo.minLength} caracteres.`;
             }
-        });
-    });
 
+            if (campo.maxLength > 0 && valor.length > campo.maxLength) {
+                return `No puede superar los ${campo.maxLength} caracteres.`;
+            }
 
-    // Vista previa de la imagen.
-    let urlImagen = null;
-
-    const vistaPrevia = document.createElement("img");
-
-    vistaPrevia.alt = "Vista previa de la imagen seleccionada";
-    vistaPrevia.hidden = true;
-    vistaPrevia.classList.add("image-preview");
-
-    imagen.insertAdjacentElement("afterend", vistaPrevia);
-
-
-    // Validar la imagen seleccionada.
-    function validarImagen() {
-
-        const archivo = imagen.files[0];
-        const elementoError = document.querySelector("#publication-image-error");
-
-        if (urlImagen) {
-            URL.revokeObjectURL(urlImagen);
-            urlImagen = null;
-        }
-
-        vistaPrevia.hidden = true;
-        vistaPrevia.removeAttribute("src");
-
-        if (!archivo) {
-            elementoError.textContent = "";
-            imagen.setAttribute("aria-invalid", "false");
             return "";
         }
 
-        // Comprobar el formato.
-        const formatosPermitidos = ["image/jpeg", "image/png"];
 
-        if (!formatosPermitidos.includes(archivo.type)) {
-            const mensaje = "La imagen debe estar en formato JPG o PNG.";
+        // Mostrar errores de la publicación.
+        function mostrarErrorPublicacion(campo) {
+
+            const mensaje = validarCampoPublicacion(campo);
+            const elementoError = document.querySelector(`#${campo.id}-error`);
 
             elementoError.textContent = mensaje;
-            imagen.setAttribute("aria-invalid", "true");
+
+            campo.setAttribute("aria-invalid", mensaje ? "true" : "false");
 
             return mensaje;
         }
 
-        // Comprobar el tamaño: máximo 5 MB.
-        const tamanoMaximo = 5 * 1024 * 1024;
 
-        if (archivo.size > tamanoMaximo) {
-            const mensaje = "La imagen no puede superar los 5 MB.";
-
-            elementoError.textContent = mensaje;
-            imagen.setAttribute("aria-invalid", "true");
-
-            return mensaje;
-        }
-
-        // Crear la vista previa.
-        urlImagen = URL.createObjectURL(archivo);
-
-        vistaPrevia.src = urlImagen;
-        vistaPrevia.hidden = false;
-
-        elementoError.textContent = "";
-        imagen.setAttribute("aria-invalid", "false");
-
-        return "";
-    }
-
-
-    imagen.addEventListener("change", () => {
-        validarImagen();
-    });
-
-
-    // Validar todos los campos al enviar.
-    formularioPublicacion.addEventListener("submit", evento => {
-
-        evento.preventDefault();
-
-        let primerCampoIncorrecto = null;
-
+        // Validar los campos al salir de ellos.
         camposPublicacion.forEach(campo => {
 
-            camposTocados.add(campo);
+            campo.addEventListener("blur", () => {
 
-            const mensaje = mostrarErrorPublicacion(campo);
+                camposTocados.add(campo);
+                mostrarErrorPublicacion(campo);
+            });
 
-            if (mensaje && !primerCampoIncorrecto) {
-                primerCampoIncorrecto = campo;
-            }
+            // Volver a validar mientras se escribe.
+            campo.addEventListener("input", () => {
+
+                if (camposTocados.has(campo)) {
+                    mostrarErrorPublicacion(campo);
+                }
+            });
+
+            campo.addEventListener("change", () => {
+
+                if (camposTocados.has(campo)) {
+                    mostrarErrorPublicacion(campo);
+                }
+            });
         });
 
-        // Comprobar también la imagen, si se ha seleccionado.
-        const errorImagen = validarImagen();
 
-        if (errorImagen && !primerCampoIncorrecto) {
-            primerCampoIncorrecto = imagen;
+        // Vista previa de la imagen.
+        let urlImagen = null;
+
+        const vistaPrevia = document.createElement("img");
+
+        vistaPrevia.alt = "Vista previa de la imagen seleccionada";
+        vistaPrevia.hidden = true;
+        vistaPrevia.classList.add("image-preview");
+
+        imagen.insertAdjacentElement("afterend", vistaPrevia);
+
+
+        // Validar la imagen seleccionada.
+        function validarImagen() {
+
+            const archivo = imagen.files[0];
+            const elementoError = document.querySelector("#publication-image-error");
+
+            if (urlImagen) {
+                URL.revokeObjectURL(urlImagen);
+                urlImagen = null;
+            }
+
+            vistaPrevia.hidden = true;
+            vistaPrevia.removeAttribute("src");
+
+            if (!archivo) {
+                elementoError.textContent = "";
+                imagen.setAttribute("aria-invalid", "false");
+                return "";
+            }
+
+            // Comprobar el formato.
+            const formatosPermitidos = ["image/jpeg", "image/png"];
+
+            if (!formatosPermitidos.includes(archivo.type)) {
+                const mensaje = "La imagen debe estar en formato JPG o PNG.";
+
+                elementoError.textContent = mensaje;
+                imagen.setAttribute("aria-invalid", "true");
+
+                return mensaje;
+            }
+
+            // Comprobar el tamaño: máximo 5 MB.
+            const tamanoMaximo = 5 * 1024 * 1024;
+
+            if (archivo.size > tamanoMaximo) {
+                const mensaje = "La imagen no puede superar los 5 MB.";
+
+                elementoError.textContent = mensaje;
+                imagen.setAttribute("aria-invalid", "true");
+
+                return mensaje;
+            }
+
+            // Crear la vista previa.
+            urlImagen = URL.createObjectURL(archivo);
+
+            vistaPrevia.src = urlImagen;
+            vistaPrevia.hidden = false;
+
+            elementoError.textContent = "";
+            imagen.setAttribute("aria-invalid", "false");
+
+            return "";
         }
 
-        // Enfocar el primer campo incorrecto.
-        if (primerCampoIncorrecto) {
-            primerCampoIncorrecto.focus();
+
+        imagen.addEventListener("change", () => {
+            validarImagen();
+        });
+
+
+        // Convertir la imagen a Base64 para poder guardarla.
+        function convertirImagenBase64(archivo) {
+
+            return new Promise((resolve, reject) => {
+
+                const lector = new FileReader();
+
+                lector.onload = () => resolve(lector.result);
+                lector.onerror = () => reject(lector.error);
+
+                lector.readAsDataURL(archivo);
+            });
         }
-    });
+
+
+        // Validar y guardar la publicación.
+        formularioPublicacion.addEventListener("submit", async evento => {
+
+            evento.preventDefault();
+
+            let primerCampoIncorrecto = null;
+
+            // Validar todos los campos.
+            camposPublicacion.forEach(campo => {
+
+                camposTocados.add(campo);
+
+                const mensaje = mostrarErrorPublicacion(campo);
+
+                if (mensaje && !primerCampoIncorrecto) {
+                    primerCampoIncorrecto = campo;
+                }
+            });
+
+            // Comprobar también la imagen, si se ha seleccionado.
+            const errorImagen = validarImagen();
+
+            if (errorImagen && !primerCampoIncorrecto) {
+                primerCampoIncorrecto = imagen;
+            }
+
+            // Enfocar el primer campo incorrecto.
+            if (primerCampoIncorrecto) {
+                primerCampoIncorrecto.focus();
+                return;
+            }
+
+
+            // Comprobar que la sesión sigue correspondiendo al usuario.
+            const sesionActual = obtenerUsuarioActivo();
+
+            if (!sesionActual || sesionActual.id !== usuarioPublicacion.id) {
+                cerrarSesion();
+                window.location.href = "login.html";
+                return;
+            }
+
+
+            try {
+
+                // Convertir la imagen, si se ha seleccionado.
+                let imagenBase64 = null;
+
+                if (imagen.files[0]) {
+                    imagenBase64 = await convertirImagenBase64(imagen.files[0]);
+                }
+
+                // Preparar los datos de la publicación.
+                const nuevaPublicacion = {
+                    usuarioId: usuarioPublicacion.id,
+                    title: titulo.value.trim(),
+                    category: categoria.value,
+                    content: contenido.value.trim(),
+                    image: imagenBase64,
+                    visibility: visibilidad ? visibilidad.value : "",
+                    fechaCreacion: new Date().toISOString()
+                };
+
+                // Guardar la publicación.
+                crearPublicacion(nuevaPublicacion);
+
+                alert("¡Tu publicación se ha creado correctamente!");
+
+                formularioPublicacion.reset();
+
+                actualizarContador();
+                validarImagen();
+
+            } catch (error) {
+
+                alert("No se ha podido guardar la publicación. Inténtalo de nuevo.");
+            }
+        });
+    }
 }

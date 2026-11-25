@@ -1,5 +1,10 @@
 const COLECCION_USUARIOS = "usuarios";
+const COLECCION_PUBLICACIONES = "publicaciones";
 
+
+// ------------------------------------
+// GESTIÓN DE USUARIOS
+// ------------------------------------
 
 // Obtener todos los usuarios guardados.
 export function obtenerTodos() {
@@ -88,6 +93,105 @@ export function eliminar(id) {
     localStorage.setItem(
         COLECCION_USUARIOS,
         JSON.stringify(usuariosActualizados)
+    );
+
+    return true;
+}
+
+
+// ------------------------------------
+// GESTIÓN DE PUBLICACIONES
+// ------------------------------------
+
+// Obtener todas las publicaciones guardadas.
+export function obtenerTodasLasPublicaciones() {
+
+    const datos = localStorage.getItem(COLECCION_PUBLICACIONES);
+
+    if (!datos) {
+        return [];
+    }
+
+    return JSON.parse(datos);
+}
+
+
+// Obtener una publicación por su identificador.
+export function obtenerPublicacionPorId(id) {
+
+    const publicaciones = obtenerTodasLasPublicaciones();
+
+    return publicaciones.find(publicacion => publicacion.id === id) || null;
+}
+
+
+// Crear una publicación nueva.
+export function crearPublicacion(dato) {
+
+    const publicaciones = obtenerTodasLasPublicaciones();
+
+    const siguienteId = publicaciones.reduce((mayorId, publicacion) => {
+        return Math.max(mayorId, publicacion.id);
+    }, 0) + 1;
+
+    const nuevaPublicacion = {
+        id: siguienteId,
+        ...dato
+    };
+
+    publicaciones.push(nuevaPublicacion);
+
+    localStorage.setItem(
+        COLECCION_PUBLICACIONES,
+        JSON.stringify(publicaciones)
+    );
+
+    return nuevaPublicacion;
+}
+
+
+// Actualizar una publicación.
+export function actualizarPublicacion(id, nuevosDatos) {
+
+    const publicaciones = obtenerTodasLasPublicaciones();
+
+    const indice = publicaciones.findIndex(publicacion => publicacion.id === id);
+
+    if (indice === -1) {
+        return null;
+    }
+
+    publicaciones[indice] = {
+        ...publicaciones[indice],
+        ...nuevosDatos,
+        id: publicaciones[indice].id
+    };
+
+    localStorage.setItem(
+        COLECCION_PUBLICACIONES,
+        JSON.stringify(publicaciones)
+    );
+
+    return publicaciones[indice];
+}
+
+
+// Eliminar una publicación.
+export function eliminarPublicacion(id) {
+
+    const publicaciones = obtenerTodasLasPublicaciones();
+
+    const publicacionesActualizadas = publicaciones.filter(
+        publicacion => publicacion.id !== id
+    );
+
+    if (publicacionesActualizadas.length === publicaciones.length) {
+        return false;
+    }
+
+    localStorage.setItem(
+        COLECCION_PUBLICACIONES,
+        JSON.stringify(publicacionesActualizadas)
     );
 
     return true;
