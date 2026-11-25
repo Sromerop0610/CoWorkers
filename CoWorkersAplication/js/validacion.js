@@ -1,3 +1,5 @@
+import { crear, obtenerTodos } from "./almacen.js";
+
 
 // FORMULARIO DE REGISTRO
 
@@ -26,6 +28,40 @@ if (formularioRegistro) {
     const dia = String(hoy.getDate()).padStart(2, "0");
 
     fechaNacimiento.max = `${anio}-${mes}-${dia}`;
+
+
+    // Preparar la contraseña para no guardarla en texto plano.
+    async function generarHashContrasena(contrasena) {
+
+        const sal = crypto.getRandomValues(new Uint8Array(16));
+
+        const clave = await crypto.subtle.importKey(
+            "raw",
+            new TextEncoder().encode(contrasena),
+            "PBKDF2",
+            false,
+            ["deriveBits"]
+        );
+
+        const resultado = await crypto.subtle.deriveBits(
+            {
+                name: "PBKDF2",
+                salt: sal,
+                iterations: 100000,
+                hash: "SHA-256"
+            },
+            clave,
+            256
+        );
+
+        return {
+            passwordSalt: btoa(String.fromCharCode(...sal)),
+            passwordHash: btoa(
+                String.fromCharCode(...new Uint8Array(resultado))
+            )
+        };
+    }
+
 
     // Validar campos del registro.
     function validarCampoRegistro(campo) {
@@ -127,6 +163,7 @@ if (formularioRegistro) {
         return "";
     }
 
+
     // Mostrar errores del registro.
     function mostrarErrorRegistro(campo) {
 
@@ -139,6 +176,7 @@ if (formularioRegistro) {
 
         return mensaje;
     }
+
 
     // Validar al salir de cada campo.
     camposRegistro.forEach(campo => {
@@ -179,13 +217,15 @@ if (formularioRegistro) {
 
     });
 
-    // Validar todos los campos al enviar.
-    formularioRegistro.addEventListener("submit", evento => {
+
+    // Validar y registrar el usuario al enviar el formulario.
+    formularioRegistro.addEventListener("submit", async evento => {
 
         evento.preventDefault();
 
         let primerCampoIncorrecto = null;
 
+        // Validar todos los campos.
         camposRegistro.forEach(campo => {
 
             camposTocados.add(campo);
@@ -200,6 +240,105 @@ if (formularioRegistro) {
 
         if (primerCampoIncorrecto) {
             primerCampoIncorrecto.focus();
+            return;
+        }
+
+
+        // Recoger los datos del formulario.
+        const username = document.querySelector("#username").value.trim();
+        const email = document.querySelector("#email").value.trim();
+        const phonePrefix = document.querySelector("#phone-prefix").value;
+        const phone = document.querySelector("#phone").value.trim();
+        const password = document.querySelector("#password").value;
+        const birthdate = document.querySelector("#birthdate").value;
+
+
+        // Comprobar que el usuario y el correo no estén registrados.
+        const usuarios = obtenerTodos();
+
+        const usuarioExiste = usuarios.some(usuario =>
+            usuario.username.toLowerCase() === username.toLowerCase()
+        );
+
+        const correoExiste = usuarios.some(usuario =>
+            usuario.email.toLowerCase() === email.toLowerCase()
+        );
+
+        if (usuarioExiste) {
+
+            const campoUsuario = document.querySelector("#username");
+
+            document.querySelector("#username-error").textContent =
+                "Este nombre de usuario ya está registrado.";
+
+            campoUsuario.setAttribute("aria-invalid", "true");
+            campoUsuario.focus();
+
+            return;
+        }
+
+        if (correoExiste) {
+
+            const campoEmail = document.querySelector("#email");
+
+            document.querySelector("#email-error").textContent =
+                "Este correo electrónico ya está registrado.";
+
+            campoEmail.setAttribute("aria-invalid", "true");
+            campoEmail.focus();
+
+            return;
+        }
+
+
+        // Preparar la contraseña.
+        try {
+
+            const datosContrasena = await generarHashContrasena(password);
+
+            // Crear el objeto con los datos del usuario.
+            const nuevoUsuario = {
+                username,
+                email,
+                phonePrefix,
+                phone,
+                passwordHash: datosContrasena.passwordHash,
+                passwordSalt: datosContrasena.passwordSalt,
+                birthdate
+            };
+
+            // Guardar el usuario en localStorage.
+            crear(nuevoUsuario);
+
+            console.log("Usuario registrado:", nuevoUsuario);
+
+            // Mostrar confirmación del registro.
+            let mensajeExito = document.querySelector("#register-success");
+
+            if (!mensajeExito) {
+
+                mensajeExito = document.createElement("p");
+                mensajeExito.id = "register-success";
+                mensajeExito.setAttribute("role", "status");
+
+                formularioRegistro.insertAdjacentElement(
+                    "afterend",
+                    mensajeExito
+                );
+            }
+
+            mensajeExito.textContent = "Cuenta creada correctamente.";
+
+        } catch (error) {
+
+            const campoPassword = document.querySelector("#password");
+
+            document.querySelector("#password-error").textContent =
+                "No se ha podido preparar la contraseña. Inténtalo de nuevo.";
+
+            campoPassword.setAttribute("aria-invalid", "true");
+            campoPassword.focus();
+
         }
 
     });
