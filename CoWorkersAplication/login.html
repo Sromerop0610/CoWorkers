@@ -1,10 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión | CO-WORKERS</title>
+    <link rel="stylesheet" href="css/mainCliente.css">
 </head>
+
 <body>
+
+<!-- HEADER -->
+<header class="header">
+    <a href="index.html" class="logo">CO-WORKERS</a>
+
+    <form class="search">
+        <label class="visually-hidden" for="buscar">Buscar</label>
+        <input type="search" id="buscar" name="q" placeholder="Buscar">
+    </form>
+
+    <button class="header-button" aria-label="Opciones de usuario"></button>
+</header>
+
+
+<main>
+    <section aria-labelledby="login-title">
+
+        <h1 id="login-title">Bienvenido de nuevo</h1>
+        <p>Inicia sesión para conectar con tu comunidad.</p>
+
+        <form id="login-form" novalidate>
+
+            <fieldset>
+                <legend>Datos de acceso</legend>
+
+                <label for="login-identifier">Nombre de usuario o correo electrónico</label>
+                <input
+                        type="text"
+                        id="login-identifier"
+                        name="identifier"
+                        autocomplete="username"
+                        required
+                >
+                <p id="identifier-error" role="alert"></p>
+
+                <label for="login-password">Contraseña</label>
+                <input
+                        type="password"
+                        id="login-password"
+                        name="password"
+                        autocomplete="current-password"
+                        required
+                >
+                <p id="login-password-error" role="alert"></p>
+
+                <label>
+                    <input type="checkbox" id="show-password">
+                    Mostrar contraseña
+                </label>
+
+            </fieldset>
+
+            <p id="login-error" role="alert"></p>
+
+            <button type="submit">Iniciar sesión</button>
+
+        </form>
+
+        <p>
+            ¿Todavía no tienes una cuenta?
+            <a href="userRegistration.html">Regístrate</a>
+        </p>
+
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2026 CO-WORKERS. Todos los derechos reservados.</p>
+</footer>
+
+<script type="module" src="js/login.js"></script>
 
 </body>
 </html>
