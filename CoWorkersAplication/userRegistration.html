@@ -10,7 +10,6 @@
 
 <body>
 
-<!-- HEADER -->
 <header class="header">
   <a href="index.html" class="logo">CO-WORKERS</a>
 
@@ -21,21 +20,19 @@
   <button class="header-button" aria-label="Opciones de usuario"></button>
 </header>
 
-
-<!-- CONTENIDO PRINCIPAL -->
 <main class="main-container">
 
   <section class="register-container" aria-labelledby="register-title">
 
     <header class="register-header">
       <h1 id="register-title">Únete a CO-WORKERS</h1>
-      <p>Crea tu cuenta y empieza a conectar con otros profesionales.</p>
+      <p id="register-description">Crea tu cuenta y empieza a conectar con otros profesionales.</p>
     </header>
 
     <form id="register-form" novalidate>
 
       <fieldset>
-        <legend>Datos de registro</legend>
+        <legend id="register-legend">Datos de registro</legend>
 
         <p>
           <label for="username">Nombre de usuario</label>
@@ -74,7 +71,7 @@
           <p>
             <label for="phone-prefix">Prefijo telefónico</label>
             <select id="phone-prefix" name="phone-prefix">
-              <option value="+34" selected>España (+34)</option>
+              <option value="+34">España (+34)</option>
               <option value="+33">Francia (+33)</option>
               <option value="+49">Alemania (+49)</option>
               <option value="+39">Italia (+39)</option>
@@ -100,7 +97,7 @@
           </p>
         </fieldset>
 
-        <p>
+        <p id="password-field">
           <label for="password">Contraseña</label>
           <input
                   type="password"
@@ -116,7 +113,7 @@
           <span class="error-message" id="password-error"></span>
         </p>
 
-        <p>
+        <p id="confirm-password-field">
           <label for="confirm-password">Repetir contraseña</label>
           <input
                   type="password"
@@ -145,7 +142,7 @@
           <span class="error-message" id="birthdate-error"></span>
         </p>
 
-        <p>
+        <p id="terms-field">
           <input
                   type="checkbox"
                   id="terms"
@@ -161,13 +158,13 @@
 
       </fieldset>
 
-      <button type="submit" class="button-primary">
+      <button type="submit" class="button-primary" id="register-submit">
         Crear cuenta
       </button>
 
     </form>
 
-    <footer class="register-footer">
+    <footer class="register-footer" id="register-footer">
       <p>
         ¿Ya tienes una cuenta?
         <a href="login.html">Inicia sesión</a>
@@ -182,4 +179,3 @@
 
 </body>
 </html>
-

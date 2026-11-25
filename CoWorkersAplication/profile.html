@@ -10,7 +10,6 @@
 
 <body>
 
-<!-- HEADER -->
 <header class="header">
     <a href="index.html" class="logo">CO-WORKERS</a>
 
@@ -21,15 +20,13 @@
     <button class="header-button" aria-label="Opciones de usuario"></button>
 </header>
 
-<!-- CONTENIDO PRINCIPAL -->
 <main class="main-container">
 
-    <!-- BARRA IZQUIERDA -->
     <aside class="sidebar-left">
 
         <section class="profile" aria-label="Perfil de usuario">
             <span class="profile-image"></span>
-            <p>Usuario</p>
+            <p id="sidebar-username">Usuario</p>
         </section>
 
         <nav class="main-navigation">
@@ -41,7 +38,6 @@
 
     </aside>
 
-    <!-- CONTENIDO DEL PERFIL -->
     <section class="feed profile-page" aria-labelledby="profile-title">
 
         <header class="section-heading">
@@ -49,55 +45,71 @@
             <a href="index.html">← Volver al inicio</a>
         </header>
 
-        <!-- INFORMACIÓN DEL PERFIL -->
         <section class="profile-information" aria-label="Información del perfil">
 
             <span class="profile-image"></span>
 
             <section class="profile-details" aria-label="Datos personales">
-                <h2>Usuario</h2>
-                <p>Profesión del usuario</p>
-                <p>Localización - Tipo de trabajo</p>
+                <h2 id="profile-username">Usuario</h2>
+                <p id="profile-email">Correo electrónico</p>
+                <p id="profile-phone">Teléfono</p>
             </section>
 
-            <a class="button button-outline" href="settings.html">Editar Perfil</a>
+            <a href="userRegistration.html" class="button button-outline">
+                Editar perfil
+            </a>
 
             <dl class="profile-data">
                 <dt>Correo electrónico</dt>
-                <dd>usuario@email.com</dd>
+                <dd id="profile-email-detail"></dd>
 
-                <dt>Experiencia</dt>
-                <dd>Experiencia del usuario</dd>
+                <dt>Teléfono</dt>
+                <dd id="profile-phone-detail"></dd>
 
-                <dt>Comunidad</dt>
-                <dd>nº contactos · nº proyectos</dd>
+                <dt>Fecha de nacimiento</dt>
+                <dd id="profile-birthdate"></dd>
             </dl>
 
         </section>
 
-        <!-- SOBRE MÍ -->
-        <section class="about-section">
+        <section aria-label="Gestión de la cuenta">
+            <h2>Gestión de la cuenta</h2>
 
-            <h2>Acerca de mí</h2>
-            <p>Descripción breve del usuario.</p>
+            <button type="button" id="delete-account-button">
+                Eliminar cuenta
+            </button>
+        </section>
 
-            <h3>Habilidades</h3>
+        <section class="projects-section">
 
-            <ul class="skill-list">
-                <li>Prototipado</li>
-                <li>Figma</li>
-                <li>IA</li>
-                <li>Investigación</li>
+            <header class="section-subheading">
+                <h2>Mis proyectos</h2>
+                <a href="proyectos.html">Ver todos</a>
+            </header>
+
+            <ul class="project-list">
+
+                <li class="project-card">
+                    <h3>Plataforma colaborativa</h3>
+                    <p>Un espacio para conectar profesionales y compartir ideas.</p>
+                    <p class="project-meta">Proyecto de ejemplo</p>
+                </li>
+
+                <li class="project-card">
+                    <h3>Web de comunidad</h3>
+                    <p>Diseño de una web para una comunidad de profesionales.</p>
+                    <p class="project-meta">Proyecto de ejemplo</p>
+                </li>
+
             </ul>
 
         </section>
 
-        <!-- PUBLICACIONES -->
         <section class="publications-section">
 
             <header class="section-subheading">
                 <h2>Mis publicaciones</h2>
-                <a href="publicaciones.html">Ver todas (6)</a>
+                <a href="publicaciones.html">Ver todas</a>
             </header>
 
             <article class="publication-card">
@@ -106,7 +118,7 @@
 
                 <header class="publication-content">
                     <h3><a href="#">Diseñar en equipo</a></h3>
-                    <p class="publication-meta">Alex García · Hace 2 días</p>
+                    <p class="publication-meta">Publicación de ejemplo</p>
                 </header>
 
                 <p>Ideas para colaborar mejor en proyectos digitales.</p>
@@ -120,38 +132,10 @@
 
         </section>
 
-        <!-- PROYECTOS -->
-        <section class="projects-section">
-
-            <header class="section-subheading">
-                <h2>Mis proyectos</h2>
-                <a href="proyectos.html">Ver todos (4)</a>
-            </header>
-
-            <ul class="project-list">
-
-                <li class="project-card">
-                    <h3>Plataforma colaborativa <a href="#">Ver →</a></h3>
-                    <p>Un espacio para conectar profesionales y compartir ideas.</p>
-                    <p class="project-meta">Estado del proyecto · tipo de proyecto</p>
-                </li>
-
-                <li class="project-card">
-                    <h3>Web de comunidad <a href="#">Ver →</a></h3>
-                    <p>Diseño de una web para una comunidad de profesionales.</p>
-                    <p class="project-meta">Estado del proyecto · tipo de proyecto</p>
-                </li>
-
-            </ul>
-
-        </section>
-
     </section>
 
-    <!-- BARRA DERECHA -->
     <aside class="sidebar-right">
 
-        <!-- NOTIFICACIONES -->
         <section class="notifications">
 
             <h2>Notificaciones</h2>
@@ -173,7 +157,7 @@
 
                     <section class="notification-content" aria-label="Nuevo comentario">
                         <h3>Nuevo comentario</h3>
-                        <p>X ha comentado tu publicación «Diseñar en equipo».</p>
+                        <p>X ha comentado tu publicación.</p>
                         <time datetime="2026-11-19T07:19">Hace 1 h</time>
                     </section>
                 </li>
@@ -192,7 +176,6 @@
 
         </section>
 
-        <!-- CHATS -->
         <section class="chats">
 
             <h2><a href="messages.html">Chats →</a></h2>
@@ -236,6 +219,8 @@
     </aside>
 
 </main>
+
+<script type="module" src="js/sesion.js"></script>
 
 </body>
 </html>

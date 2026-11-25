@@ -1,33 +1,109 @@
-import { crear, obtenerTodos } from "./almacen.js";
+import {
+    crear,
+    obtenerTodos,
+    obtenerPorId,
+    actualizar
+} from "./almacen.js";
+
+import {
+    obtenerUsuarioActivo,
+    cerrarSesion
+} from "./sesion.js";
 
 
-// FORMULARIO DE REGISTRO
+// ------------------------------------
+// FORMULARIO DE REGISTRO Y EDICIÓN
+// ------------------------------------
 
 const formularioRegistro = document.querySelector("#register-form");
 
 if (formularioRegistro) {
 
+    const campoNombre = document.querySelector("#username");
+    const campoCorreo = document.querySelector("#email");
+    const campoPrefijo = document.querySelector("#phone-prefix");
+    const campoTelefono = document.querySelector("#phone");
+    const campoPassword = document.querySelector("#password");
+    const campoConfirmacion = document.querySelector("#confirm-password");
+    const campoFecha = document.querySelector("#birthdate");
+    const campoCondiciones = document.querySelector("#terms");
+
+    const usuarioActivo = obtenerUsuarioActivo();
+    let usuarioEnEdicion = usuarioActivo
+        ? obtenerPorId(usuarioActivo.id)
+        : null;
+
+    // Si la sesión apunta a un usuario que ya no existe, se cierra.
+    if (usuarioActivo && !usuarioEnEdicion) {
+        cerrarSesion();
+    }
+
+    const modoEdicion = usuarioEnEdicion !== null;
+
+    const campoPasswordContenedor = document.querySelector("#password-field");
+    const campoConfirmacionContenedor = document.querySelector("#confirm-password-field");
+    const campoCondicionesContenedor = document.querySelector("#terms-field");
+
+    const titulo = document.querySelector("#register-title");
+    const descripcion = document.querySelector("#register-description");
+    const leyenda = document.querySelector("#register-legend");
+    const botonEnviar = document.querySelector("#register-submit");
+    const pieFormulario = document.querySelector("#register-footer");
+
+    // Configurar el formulario según el modo.
+    if (modoEdicion) {
+
+        document.title = "Editar perfil | CO-WORKERS";
+
+        titulo.textContent = "Editar perfil";
+        descripcion.textContent = "Modifica los datos de tu cuenta.";
+        leyenda.textContent = "Datos personales";
+        botonEnviar.textContent = "Guardar cambios";
+
+        campoNombre.value = usuarioEnEdicion.username;
+        campoCorreo.value = usuarioEnEdicion.email;
+        campoPrefijo.value = usuarioEnEdicion.phonePrefix || "+34";
+        campoTelefono.value = usuarioEnEdicion.phone || "";
+        campoFecha.value = usuarioEnEdicion.birthdate;
+
+        campoPasswordContenedor.hidden = true;
+        campoConfirmacionContenedor.hidden = true;
+        campoCondicionesContenedor.hidden = true;
+
+        campoPassword.required = false;
+        campoConfirmacion.required = false;
+        campoCondiciones.required = false;
+
+        pieFormulario.hidden = true;
+    }
+
+
     const camposRegistro = [
-        document.querySelector("#username"),
-        document.querySelector("#email"),
-        document.querySelector("#phone"),
-        document.querySelector("#password"),
-        document.querySelector("#confirm-password"),
-        document.querySelector("#birthdate"),
-        document.querySelector("#terms")
+        campoNombre,
+        campoCorreo,
+        campoTelefono,
+        campoFecha
     ];
+
+    if (!modoEdicion) {
+        camposRegistro.push(
+            campoPassword,
+            campoConfirmacion,
+            campoCondiciones
+        );
+    }
 
     const camposTocados = new Set();
 
+
     // Fecha de nacimiento: no puede ser futura.
-    const fechaNacimiento = document.querySelector("#birthdate");
     const hoy = new Date();
 
     const anio = hoy.getFullYear();
     const mes = String(hoy.getMonth() + 1).padStart(2, "0");
     const dia = String(hoy.getDate()).padStart(2, "0");
 
-    fechaNacimiento.max = `${anio}-${mes}-${dia}`;
+    campoFecha.max = `${anio}-${mes}-${dia}`;
 
 
     // Preparar la contraseña para no guardarla en texto plano.
@@ -63,7 +139,7 @@ if (formularioRegistro) {
     }
 
 
-    // Validar campos del registro.
+    // Validar los campos del formulario.
     function validarCampoRegistro(campo) {
 
         const valor = campo.type === "checkbox"
@@ -125,7 +201,7 @@ if (formularioRegistro) {
         // Confirmación de contraseña.
         if (campo.id === "confirm-password" && valor) {
 
-            const password = document.querySelector("#password").value;
+            const password = campoPassword.value;
 
             if (valor !== password) {
                 return "Las contraseñas no coinciden.";
@@ -164,7 +240,7 @@ if (formularioRegistro) {
     }
 
 
-    // Mostrar errores del registro.
+    // Mostrar los errores de cada campo.
     function mostrarErrorRegistro(campo) {
 
         const mensaje = validarCampoRegistro(campo);
@@ -185,7 +261,6 @@ if (formularioRegistro) {
 
             camposTocados.add(campo);
             mostrarErrorRegistro(campo);
-
         });
 
         // Volver a validar mientras se escribe.
@@ -198,13 +273,10 @@ if (formularioRegistro) {
             // Si cambia la contraseña, comprobar su confirmación.
             if (campo.id === "password") {
 
-                const confirmacion = document.querySelector("#confirm-password");
-
-                if (camposTocados.has(confirmacion)) {
-                    mostrarErrorRegistro(confirmacion);
+                if (camposTocados.has(campoConfirmacion)) {
+                    mostrarErrorRegistro(campoConfirmacion);
                 }
             }
-
         });
 
         campo.addEventListener("change", () => {
@@ -212,13 +284,11 @@ if (formularioRegistro) {
             if (camposTocados.has(campo)) {
                 mostrarErrorRegistro(campo);
             }
-
         });
-
     });
 
 
-    // Validar y registrar el usuario al enviar el formulario.
+    // Validar y guardar al enviar el formulario.
     formularioRegistro.addEventListener("submit", async evento => {
 
         evento.preventDefault();
@@ -235,7 +305,6 @@ if (formularioRegistro) {
             if (mensaje && !primerCampoIncorrecto) {
                 primerCampoIncorrecto = campo;
             }
-
         });
 
         if (primerCampoIncorrecto) {
@@ -245,58 +314,96 @@ if (formularioRegistro) {
 
 
         // Recoger los datos del formulario.
-        const username = document.querySelector("#username").value.trim();
-        const email = document.querySelector("#email").value.trim();
-        const phonePrefix = document.querySelector("#phone-prefix").value;
-        const phone = document.querySelector("#phone").value.trim();
-        const password = document.querySelector("#password").value;
-        const birthdate = document.querySelector("#birthdate").value;
+        const username = campoNombre.value.trim();
+        const email = campoCorreo.value.trim().toLowerCase();
+        const phonePrefix = campoPrefijo.value;
+        const phone = campoTelefono.value.trim();
+        const birthdate = campoFecha.value;
 
 
-        // Comprobar que el usuario y el correo no estén registrados.
+        // Comprobar que el nombre y el correo no estén ocupados.
         const usuarios = obtenerTodos();
 
         const usuarioExiste = usuarios.some(usuario =>
+            usuario.id !== (modoEdicion ? usuarioEnEdicion.id : null) &&
             usuario.username.toLowerCase() === username.toLowerCase()
         );
 
         const correoExiste = usuarios.some(usuario =>
-            usuario.email.toLowerCase() === email.toLowerCase()
+            usuario.id !== (modoEdicion ? usuarioEnEdicion.id : null) &&
+            usuario.email.toLowerCase() === email
         );
 
         if (usuarioExiste) {
 
-            const campoUsuario = document.querySelector("#username");
+            campoNombre.focus();
 
             document.querySelector("#username-error").textContent =
                 "Este nombre de usuario ya está registrado.";
 
-            campoUsuario.setAttribute("aria-invalid", "true");
-            campoUsuario.focus();
+            campoNombre.setAttribute("aria-invalid", "true");
 
             return;
         }
 
         if (correoExiste) {
 
-            const campoEmail = document.querySelector("#email");
+            campoCorreo.focus();
 
             document.querySelector("#email-error").textContent =
                 "Este correo electrónico ya está registrado.";
 
-            campoEmail.setAttribute("aria-invalid", "true");
-            campoEmail.focus();
+            campoCorreo.setAttribute("aria-invalid", "true");
 
             return;
         }
 
 
-        // Preparar la contraseña.
+        // MODO EDICIÓN: actualizar el usuario existente.
+        if (modoEdicion) {
+
+            const datosActualizados = {
+                username,
+                email,
+                phonePrefix,
+                phone,
+                birthdate
+            };
+
+            const usuarioActualizado = actualizar(
+                usuarioEnEdicion.id,
+                datosActualizados
+            );
+
+            if (!usuarioActualizado) {
+                alert("No se han podido guardar los cambios.");
+                return;
+            }
+
+            // Actualizar los datos de la sesión.
+            sessionStorage.setItem(
+                "usuarioActivo",
+                JSON.stringify({
+                    id: usuarioActualizado.id,
+                    username: usuarioActualizado.username,
+                    email: usuarioActualizado.email
+                })
+            );
+
+            alert("Los datos de tu perfil se han actualizado correctamente.");
+
+            window.location.href = "profile.html";
+
+            return;
+        }
+
+
+        // MODO REGISTRO: preparar y guardar la contraseña.
         try {
 
+            const password = campoPassword.value;
             const datosContrasena = await generarHashContrasena(password);
 
-            // Crear el objeto con los datos del usuario.
             const nuevoUsuario = {
                 username,
                 email,
@@ -307,10 +414,7 @@ if (formularioRegistro) {
                 birthdate
             };
 
-            // Guardar el usuario en localStorage.
             crear(nuevoUsuario);
-
-            console.log("Usuario registrado:", nuevoUsuario);
 
             // Mostrar confirmación del registro.
             let mensajeExito = document.querySelector("#register-success");
@@ -331,22 +435,19 @@ if (formularioRegistro) {
 
         } catch (error) {
 
-            const campoPassword = document.querySelector("#password");
-
             document.querySelector("#password-error").textContent =
                 "No se ha podido preparar la contraseña. Inténtalo de nuevo.";
 
             campoPassword.setAttribute("aria-invalid", "true");
             campoPassword.focus();
-
         }
-
     });
-
 }
 
 
+// ------------------------------------
 // FORMULARIO DE PUBLICACIONES
+// ------------------------------------
 
 const formularioPublicacion = document.querySelector("#publication-form");
 
@@ -374,7 +475,6 @@ if (formularioPublicacion) {
 
         contador.textContent =
             `${cantidad} / ${contenido.maxLength} caracteres (mínimo ${contenido.minLength})`;
-
     }
 
     contenido.addEventListener("input", actualizarContador);
@@ -424,7 +524,6 @@ if (formularioPublicacion) {
 
             camposTocados.add(campo);
             mostrarErrorPublicacion(campo);
-
         });
 
         // Volver a validar mientras se escribe.
@@ -433,7 +532,6 @@ if (formularioPublicacion) {
             if (camposTocados.has(campo)) {
                 mostrarErrorPublicacion(campo);
             }
-
         });
 
         campo.addEventListener("change", () => {
@@ -441,9 +539,7 @@ if (formularioPublicacion) {
             if (camposTocados.has(campo)) {
                 mostrarErrorPublicacion(campo);
             }
-
         });
-
     });
 
 
@@ -537,7 +633,6 @@ if (formularioPublicacion) {
             if (mensaje && !primerCampoIncorrecto) {
                 primerCampoIncorrecto = campo;
             }
-
         });
 
         // Comprobar también la imagen, si se ha seleccionado.
@@ -551,7 +646,5 @@ if (formularioPublicacion) {
         if (primerCampoIncorrecto) {
             primerCampoIncorrecto.focus();
         }
-
     });
-
 }
